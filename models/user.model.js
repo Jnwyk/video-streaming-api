@@ -13,7 +13,12 @@ const userSchema = new Schema({
         required: [true, "Email is required"],
         validate: [validateEmail, "Wrong email address"],
         unique: true,
-      }
+      },
+    streams: {
+        type: mongoose.ObjectId,
+        ref: "Stream",
+        max: [3, "There can't be more than 3 streams attatched to a user"]
+    }
 },
 {
     timestamps: true
