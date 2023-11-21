@@ -1,13 +1,28 @@
 const mongoose = require("mongoose");
 const Stream = require("../models/stream.model.js");
-const { NotAllowedError } = require("../errors/errors.js");
+const { NotAllowedError, IdNotFoundError } = require("../errors/errors.js");
 
-const getAll = (req, res, next) => {
-  res.status(200).json({ message: "getAll" });
+const getAll = async (req, res, next) => {
+  try {
+    const streams = await Stream.find();
+    res.status(200).json({ success: true, streams: streams });
+  } catch (err) {
+    next(err);
+  }
 };
 
-const get = (req, res, next) => {
-  res.status(200).json({ message: "get" });
+const get = async (req, res, next) => {
+  try {
+    const streamId = req.params.streamId;
+    const stream = await Stream.findById(streamId);
+    if (!stream) {
+      throw new IdNotFoundError();
+    }
+    res.status(200).json({ success: true, stream: stream });
+  } catch (err) {
+    if (err instanceof mongoose.Error.CastError) err = new IdNotFoundError();
+    next(err);
+  }
 };
 
 const create = async (req, res, next) => {
