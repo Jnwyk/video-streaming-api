@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Stream = require("../models/stream.model.js");
-const { NotAllowedError, IdNotFoundError } = require("../errors/errors.js");
+const { IdNotFoundError } = require("../errors/errors.js");
 
 const getAll = async (req, res, next) => {
   try {
@@ -35,8 +35,20 @@ const create = async (req, res, next) => {
   }
 };
 
-const remove = (req, res, next) => {
-  res.status(200).json({ message: "remove" });
+const remove = async (req, res, next) => {
+  try {
+    const streamId = req.params.streamId;
+    const stream = await Stream.findByIdAndDelete(streamId);
+    if (!stream) {
+      throw new IdNotFoundError();
+    }
+    res
+      .status(200)
+      .json({ success: true, message: `${stream.id} has been deleted` });
+  } catch (err) {
+    if (err instanceof mongoose.Error.CastError) err = new IdNotFoundError();
+    next(err);
+  }
 };
 
 module.exports = {

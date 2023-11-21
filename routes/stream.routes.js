@@ -8,6 +8,6 @@ const {
 
 module.exports = Router()
   .get("/", getAll)
-  .get("/:streamId", get)
   .post("/", create)
-  .delete("/", remove);
+  .get("/:streamId", get)
+  .delete("/:streamId", remove);
