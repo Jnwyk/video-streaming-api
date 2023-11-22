@@ -7,6 +7,9 @@ const {
   IncorrectInputData,
 } = require("../errors/errors.js");
 
+/**
+ * Retrieve specified user from the database
+ */
 const get = async (req, res, next) => {
   try {
     const userId = req.params.userId;
@@ -24,6 +27,9 @@ const get = async (req, res, next) => {
   }
 };
 
+/**
+ * Create a user
+ */
 const create = async (req, res, next) => {
   try {
     const user = await User.create({ ...req.body });
@@ -34,6 +40,9 @@ const create = async (req, res, next) => {
   }
 };
 
+/**
+ * Delete a user
+ */
 const remove = async (req, res, next) => {
   try {
     const userId = req.params.userId;
@@ -50,6 +59,9 @@ const remove = async (req, res, next) => {
   }
 };
 
+/**
+ * Add or remove stream that user is watching
+ */
 const updateStreams = async (req, res, next) => {
   try {
     const actionType = req.query.type; // type of action (delete or add)
@@ -65,6 +77,9 @@ const updateStreams = async (req, res, next) => {
       ); // update user streams without deleted stream
     } else if (actionType === "add") {
       user.streams = [...user.streams, streamId]; //update user streams with added stream
+      if (user.streams.length > 3) {
+        throw new NotAllowedError(); // throw an error, if user is watching more than 3 streams
+      }
     } else {
       throw new IncorrectInputData(); // throw an error, if wrong query string
     }
@@ -75,6 +90,9 @@ const updateStreams = async (req, res, next) => {
   }
 };
 
+/**
+ * Retrieve streams that user is watching from the database
+ */
 const getStreams = async (req, res, next) => {
   try {
     const userId = req.params.userId;
