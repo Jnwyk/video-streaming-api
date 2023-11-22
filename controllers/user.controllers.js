@@ -19,8 +19,20 @@ const update = (req, res, next) => {
   res.status(200).json({ message: "get" });
 };
 
-const remove = (req, res, next) => {
-  res.status(200).json({ message: "get" });
+const remove = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      throw new IdNotFoundError(); // throw an error, if stream doesn't exist
+    }
+    res
+      .status(200)
+      .json({ success: true, message: `${user.id} has been deleted` });
+  } catch (err) {
+    if (err instanceof mongoose.Error.CastError) err = new IdNotFoundError();
+    next(err); // pass error to error middleware
+  }
 };
 
 module.exports = {
