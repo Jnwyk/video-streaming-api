@@ -34,4 +34,21 @@ class NotAllowedError extends Error {
   }
 }
 
-module.exports = { InvalidPathError, IdNotFoundError, NotAllowedError };
+/**
+ * User provided incorrect data
+ */
+class IncorrectInputData extends Error {
+  constructor(userId) {
+    super();
+    this.name = this.constructor.name;
+    this.message = `User ${userId} is watching too many streams`;
+    this.statusCode = 422;
+  }
+}
+
+module.exports = {
+  InvalidPathError,
+  IdNotFoundError,
+  NotAllowedError,
+  IncorrectInputData,
+};
