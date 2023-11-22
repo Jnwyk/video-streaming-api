@@ -1,3 +1,6 @@
+/**
+ * Specified path doesn't exist ettor class
+ */
 class InvalidPathError extends Error {
   constructor() {
     super();
@@ -7,6 +10,9 @@ class InvalidPathError extends Error {
   }
 }
 
+/**
+ * Specified ID was not found in database error class
+ */
 class IdNotFoundError extends Error {
   constructor() {
     super();
@@ -16,6 +22,9 @@ class IdNotFoundError extends Error {
   }
 }
 
+/**
+ * User is forbidden to enter error class
+ */
 class NotAllowedError extends Error {
   constructor(userId) {
     super();
