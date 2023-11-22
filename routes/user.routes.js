@@ -2,12 +2,14 @@ const { Router } = require("express");
 const {
   get,
   create,
-  update,
   remove,
+  updateStreams,
+  getStreams,
 } = require("../controllers/user.controllers.js");
 
 module.exports = Router()
   .post("/", create)
   .get("/:userId", get)
-  .patch("/streams/:userId", update)
-  .delete("/:userId", remove);
+  .delete("/:userId", remove)
+  .patch("/streams/:userId", updateStreams)
+  .get("/streams/:userId", getStreams);

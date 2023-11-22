@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 const User = require("../models/user.model.js");
-const { IdNotFoundError, NotAllowedError } = require("../errors/errors.js");
+const Stream = require("../models/stream.model.js");
+const {
+  IdNotFoundError,
+  NotAllowedError,
+  IncorrectInputData,
+} = require("../errors/errors.js");
 
 const get = async (req, res, next) => {
   try {
@@ -29,10 +34,6 @@ const create = async (req, res, next) => {
   }
 };
 
-const update = (req, res, next) => {
-  res.status(200).json({ message: "get" });
-};
-
 const remove = async (req, res, next) => {
   try {
     const userId = req.params.userId;
@@ -49,9 +50,39 @@ const remove = async (req, res, next) => {
   }
 };
 
+const updateStreams = async (req, res, next) => {
+  try {
+    const actionType = req.query.type; // type of action (delete or add)
+    const userId = req.params.userId;
+    const streamId = req.body.streamId;
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new IdNotFoundError(); // throw an error, if stream doesn't exist
+    }
+    if (actionType === "delete") {
+      user.streams = user.streams.filter(
+        (stream) => stream.toString() !== streamId
+      ); // update user streams without deleted stream
+    } else if (actionType === "add") {
+      user.streams = [...user.streams, streamId]; //update user streams with added stream
+    } else {
+      throw new IncorrectInputData(); // throw an error, if wrong query string
+    }
+    await user.save();
+    res.status(200).json({ success: true, message: "Operation successfull" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getStreams = (req, res, next) => {
+  res.status(200).json({ message: "get" });
+};
+
 module.exports = {
   get,
   create,
-  update,
   remove,
+  updateStreams,
+  getStreams,
 };
