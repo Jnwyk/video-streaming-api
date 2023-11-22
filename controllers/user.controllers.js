@@ -75,8 +75,23 @@ const updateStreams = async (req, res, next) => {
   }
 };
 
-const getStreams = (req, res, next) => {
-  res.status(200).json({ message: "get" });
+const getStreams = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new IdNotFoundError(); // throw an error, if stream doesn't exist
+    }
+    const streams = await Promise.all(
+      user.streams.map((streamId) => Stream.findById(streamId))
+    );
+    if (streams.length > 3) {
+      throw new NotAllowedError(); // throw an error, if user is watching more than 3 streams
+    }
+    res.status(200).json({ success: true, streams: streams });
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = {
