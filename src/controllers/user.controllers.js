@@ -76,6 +76,10 @@ const updateStreams = async (req, res, next) => {
         (stream) => stream.toString() !== streamId
       ); // update user streams without deleted stream
     } else if (actionType === "add") {
+      const stream = await Stream.findById(streamId);
+      if (!stream) {
+        throw new IncorrectInputData(); // throw an error, if wrong stream to be added
+      }
       user.streams = [...user.streams, streamId]; //update user streams with added stream
       if (user.streams.length > 3) {
         throw new NotAllowedError(); // throw an error, if user is watching more than 3 streams
