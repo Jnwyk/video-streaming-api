@@ -90,6 +90,7 @@ const updateStreams = async (req, res, next) => {
     await user.save();
     res.status(200).json({ success: true, message: "Operation successfull" });
   } catch (err) {
+    if (err instanceof mongoose.Error.CastError) err = new IdNotFoundError();
     next(err);
   }
 };
@@ -112,6 +113,7 @@ const getStreams = async (req, res, next) => {
     }
     res.status(200).json({ success: true, streams: streams });
   } catch (err) {
+    if (err instanceof mongoose.Error.CastError) err = new IdNotFoundError();
     next(err);
   }
 };
