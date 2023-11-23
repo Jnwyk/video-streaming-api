@@ -38,10 +38,10 @@ class NotAllowedError extends Error {
  * User provided incorrect data
  */
 class IncorrectInputData extends Error {
-  constructor(userId) {
+  constructor() {
     super();
     this.name = this.constructor.name;
-    this.message = `User ${userId} is watching too many streams`;
+    this.message = `Wrong query string`;
     this.statusCode = 422;
   }
 }
