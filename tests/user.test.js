@@ -1,13 +1,16 @@
 const app = require("../src/app.js");
 const request = require("supertest");
 
-const correctTestUserId = "655e134b7224c6321af38780";
-const incorrectTestUserId = "655e134b7224c6321af38754";
-const tooManyStreamsUserId = "655e15397224c6321af38785";
+const correctTestUserId = "655e134b7224c6321af38780"; //correct userId
+const incorrectTestUserId = "655e134b7224c6321af38754"; // userId doesn't exist
+const tooManyStreamsUserId = "655e15397224c6321af38785"; // userId that has too many stremas attatched
 
-const testStreamId = "655e11a41050a63bbb6010a7";
-const incorrectTestStreamId = "655e11a41050a63bbb602137";
+const testStreamId = "655e11a41050a63bbb6010a7"; //correct streamId
+const incorrectTestStreamId = "655e11a41050a63bbb602137"; // streamId doesn't exist
 
+/**
+ * Tests for get user's streams
+ */
 describe("GET /users/stereams/:userId", () => {
   describe("successfull", () => {
     test("should respond with a 200 status code", async () => {
@@ -22,7 +25,7 @@ describe("GET /users/stereams/:userId", () => {
       const res = await request(app).get(
         `/users/streams/${incorrectTestUserId}`
       );
-      expect(res.statusCode).toEqual(404);
+      expect(res.statusCode).toEqual(404); // IdNotFoundError();
     });
   });
 
@@ -31,7 +34,7 @@ describe("GET /users/stereams/:userId", () => {
       const res = await request(app).get(
         `/users/streams/${tooManyStreamsUserId}`
       );
-      expect(res.statusCode).toEqual(403);
+      expect(res.statusCode).toEqual(403); // NotAllowedError();
     });
   });
 });
@@ -47,6 +50,9 @@ describe("successfully added stream", () => {
   });
 });
 
+/**
+ * Tests for update user's streams
+ */
 describe("PATCH /users/streams/:userId", () => {
   describe("successfully deleted stream", () => {
     test("should respond with a 200 status code", async () => {
@@ -66,7 +72,7 @@ describe("PATCH /users/streams/:userId", () => {
         .send({
           streamId: testStreamId,
         });
-      expect(res.statusCode).toEqual(422);
+      expect(res.statusCode).toEqual(422); // IncorrectInputData();
     });
   });
 
@@ -77,7 +83,7 @@ describe("PATCH /users/streams/:userId", () => {
         .send({
           streamId: testStreamId,
         });
-      expect(res.statusCode).toEqual(403);
+      expect(res.statusCode).toEqual(403); // NotAllowedError();
     });
   });
 
@@ -88,7 +94,7 @@ describe("PATCH /users/streams/:userId", () => {
         .send({
           streamId: testStreamId,
         });
-      expect(res.statusCode).toEqual(404);
+      expect(res.statusCode).toEqual(404); // IdNotFoundError();
     });
   });
 
@@ -99,7 +105,7 @@ describe("PATCH /users/streams/:userId", () => {
         .send({
           streamId: incorrectTestStreamId,
         });
-      expect(res.statusCode).toEqual(422);
+      expect(res.statusCode).toEqual(422); // IncorrectInputData();
     });
   });
 });
