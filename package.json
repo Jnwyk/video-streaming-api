@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "jest --watchAll",
+    "build": "node server.js",
     "start": "nodemon server.js"
   },
   "author": "",
